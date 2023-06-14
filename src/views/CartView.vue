@@ -14,6 +14,8 @@ const store = useStore();
       <h1>{{ movie.title }}</h1>
     </div>
   </div>
+
+<!-- add remove button -->
 </template>
 
 <style scoped>
