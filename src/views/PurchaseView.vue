@@ -185,7 +185,7 @@ body {
 button {
   padding: 6px 24px;
   border-radius: 8px;
-  border: none;
+  border: 1px;
   font-size: 16px;
   cursor: pointer;
 }
