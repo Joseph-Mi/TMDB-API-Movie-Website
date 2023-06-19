@@ -1,24 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import Modal from "../components/Modal.vue";
-import { useStore } from "../store/index.js";
+// import { useStore } from "../store/index.js";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
-// const router = useRouter();
-// const genre = ref(28);
-// const search = ref("");
-// const movies = ref(null);
-// const page = ref(1);
-// const currentURL = ref("");
-// const totalPages = ref(0);
-// const showModal = ref(false);
-// const selectedRecordId = ref(0);
-
-// const toggleModal = (id) => {
-//   showModal.value = !showModal.value;
-//   selectedRecordId.value = id;
-// };
 const router = useRouter();
 const genre = ref(28);
 const search = ref("");
@@ -29,7 +15,7 @@ const totalPages = ref(0);
 const showModal = ref(false);
 const selectedRecordId = ref(0);
 
-const toggleModal = (id) => {
+const toggleModal = async (id) => {
   showModal.value = !showModal.value;
   selectedRecordId.value = id;
 };
@@ -38,7 +24,8 @@ const getTMDBData = async (url, options, page) => {
   movies.value = (
     await axios.get(url, {
       params: {
-        api_key: import.meta.env.VITE_TMDB_API_KEY,
+        api_key: "fbb6ba03bbd1aaeb92c52f989ea8698d",
+        // api_key: import.meta.env.VITE_TMDB_API_KEY,
         region: "US",
         language: "en",
         include_adult: false,
@@ -53,9 +40,15 @@ const getTMDBData = async (url, options, page) => {
 </script>
 
 <template>
-  <div>
+  <body>
+    <div class="titleHead">
+      <h1>MovieMania</h1>
+      <div class="cart">
+        <button class="cartButton" @click="router.push('/cart')">Cart</button>
+      </div>
+    </div>
     <div class="controls">
-      <div>
+      <div class="search-container">
         <input type="search" placeholder="Enter search items" v-model="search" />
         <button
           @click="
@@ -67,7 +60,7 @@ const getTMDBData = async (url, options, page) => {
           Search
         </button>
       </div>
-      <div>
+      <div class="select-container">
         <select v-model="genre">
           <option value="28">Action</option>
           <option value="10751">Family</option>
@@ -98,7 +91,6 @@ const getTMDBData = async (url, options, page) => {
         >
           Get
         </button>
-        <button @click="router.push('/cart')">Cart</button>
       </div>
     </div>
     <div class="pagination">
@@ -115,7 +107,7 @@ const getTMDBData = async (url, options, page) => {
       >
         Prev
       </button>
-      <p>{{ `Page ${page} of ${totalPages}` }}</p>
+      <p class="pageCount">{{ `Page ${page} of ${totalPages}` }}</p>
       <button
         @click="
           getTMDBData(
@@ -123,43 +115,91 @@ const getTMDBData = async (url, options, page) => {
             {
               query: search,
             },
-            page == totalPages ? totalPages : page++
+            page >= totalPages ? totalPages : page++
           )
         "
       >
         Next
       </button>
     </div>
-    <div v-if="movies" class="tiles">
-      <div v-for="movie in movies.results" :key="movie.id" class="tile">
+    <div v-if="movies" class="content-container">
+      <div v-for="movie in movies.results" :key="movie.id" class="movie-container">
         <img
           :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
           @click="toggleModal(movie.id)"
         />
       </div>
     </div>
-  </div>
+  </body>
   <Modal v-if="showModal" :id="selectedRecordId" @toggleModal="toggleModal()" />
 </template>
 
 <style scoped>
-.tiles {
+* {
+  margin: 0;
+}
+.titleHead {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  color: white;
+  justify-content: center;
 }
-
-img {
-  width: 200px;
+.cart {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  padding: 7px;
 }
-
+.pageCount {
+  color: white;
+}
+body {
+  min-height: 100vh;
+  background-image: linear-gradient(#000000 0%, #848484 35%, #000000 100%);
+  width: 100vw;
+}
+.content-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5vw;
+  justify-content: space-between;
+}
+.movie-container img {
+  width: 15vw;
+}
 .pagination {
   display: flex;
   gap: 1rem;
+  margin: 1rem;
 }
-
 .controls {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  margin: 1rem;
+}
+.select-container,
+.search-container {
+  display: flex;
+  gap: 1rem;
+}
+button {
+  padding: 6px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+.cartButton{
+  border: 1;
+  border-radius: 10px;
+  font-weight: 600;
+  margin: 0 10px;
+  width: 150px;
+  padding: 12px 0;
+  box-shadow: 0 0 20px rgba(214, 214, 214, 0.7);
+  transition: 0.5s;
+}
+button:hover {
+  background-color: #8e8e8e;
 }
 </style>

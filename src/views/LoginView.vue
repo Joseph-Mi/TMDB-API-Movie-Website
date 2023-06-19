@@ -1,4 +1,5 @@
 <script setup>
+import Header from "../components/Header.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../store";
@@ -40,7 +41,7 @@ const registerViaGoogle = async () => {
   const provider = new GoogleAuthProvider();
   const {user} = await signInWithPopup(auth, provider);
   store.user = user;
-  // const { cart } = (await getDoc(doc(firestore, "cart", user.email))).data();
+  // const { cart } = (await getDoc(doc(firestore, "carts", user.user.email))).data();
   // store.cart = cart;
   router.push('/purchase')
 };
@@ -68,6 +69,7 @@ const LoginEmail = async () => {
 </script>
 
 <template>
+  <Header/>
   <div class="auth">
     <div class="login">
       <div class="LoginWithGoogle">

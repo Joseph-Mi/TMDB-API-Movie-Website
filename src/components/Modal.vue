@@ -87,7 +87,7 @@ const movie = (
 button {
   background: #ffffffa2;
   font-weight: bold;
-  border-radius: 50%;
+  cursor: pointer;
 }
 
 .outer-container .inner-container .icon {
@@ -97,10 +97,6 @@ button {
 
 img {
   width: 200px;
-}
-
-button {
-  cursor: pointer;
 }
 
 button:hover {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { firestore } from "../firebase/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 export const useStore = defineStore('store', {
   state: () => ({
@@ -14,7 +14,13 @@ export const useStore = defineStore('store', {
         title,
       });
 
-      await setDoc(doc(firestore, "carts", this.user.email), { cart: this.cart });
-    }
+      await getDoc(doc(firestore, "carts", this.user.email), { cart: this.cart });
+    },
+    async removeFromCart(index) {
+      this.cart.splice(index, 1);
+      await setDoc(doc(firestore, "carts", this.user.email), {
+        cart: this.cart,
+      });
+    },
   }
 })
